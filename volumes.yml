@@ -1,0 +1,30 @@
+volumes:
+  mongodb_data:
+    driver_opts:
+      type: none
+      o: bind
+      device: "${FNM_PATH}/storage/mongo/data"
+
+  fastnetmon_logs:
+    driver_opts:
+      type: none
+      o: bind
+      device: "${FNM_PATH}/storage/fastnetmon/logs"
+
+  clickhouse_data:
+    driver_opts:
+      type: none
+      o: bind
+      device: "${FNM_PATH}/storage/clickhouse/data"
+
+  clickhouse_logs:
+    driver_opts:
+      type: none
+      o: bind
+      device: "${FNM_PATH}/storage/clickhouse/logs"
+
+  grafana_data:
+    driver_opts:
+      type: none
+      o: bind
+      device: "${FNM_PATH}/storage/grafana/data"

@@ -1,0 +1,5 @@
+<clickhouse>
+   <mysql_port remove="true"/>
+   <postgresql_port remove="true"/>
+   <interserver_http_port remove="true"/>
+</clickhouse>

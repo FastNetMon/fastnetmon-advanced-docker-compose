@@ -1,0 +1,13 @@
+
+apiVersion: 1
+
+providers:
+  - name: dashboards
+    type: file
+    updateIntervalSeconds: 30
+    editable: true
+    allowUiUpdates: true
+    options:
+      path: /srv/fastnetmon_dashboards
+      foldersFromFilesStructure: true
+

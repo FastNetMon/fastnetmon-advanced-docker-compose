@@ -1,0 +1,714 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana-clickhouse-datasource",
+          "uid": "fnm-clickhouse-datasource-uid"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "target": {
+          "limit": 100,
+          "matchAny": false,
+          "tags": [],
+          "type": "dashboard"
+        },
+        "type": "dashboard"
+      },
+      {
+        "datasource": {
+          "type": "grafana-clickhouse-datasource",
+          "uid": "fnm-clickhouse-datasource-uid"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "red",
+        "mappings": {
+          "text": {
+            "source": "field",
+            "value": "text"
+          },
+          "time": {
+            "source": "field",
+            "value": "eventDateTime"
+          },
+          "title": {
+            "source": "field",
+            "value": "title"
+          }
+        },
+        "name": "Attacks",
+        "target": {
+          "builderOptions": {
+            "database": "fastnetmon",
+            "fields": [
+              "title",
+              "text",
+              "eventDateTime"
+            ],
+            "filters": [
+              {
+                "condition": "AND",
+                "filterType": "custom",
+                "key": "eventDateTime",
+                "operator": "WITH IN DASHBOARD TIME RANGE",
+                "restrictToFields": [
+                  {
+                    "label": "eventDateTime",
+                    "name": "eventDateTime",
+                    "picklistValues": [],
+                    "type": "DateTime"
+                  }
+                ],
+                "type": "datetime"
+              }
+            ],
+            "limit": 100,
+            "mode": "list",
+            "orderBy": [],
+            "table": "attack_events"
+          },
+          "queryType": "builder",
+          "rawSql": "SELECT \"title\", \"text\", \"eventDateTime\" FROM \"fastnetmon\".\"attack_events\" WHERE   ( eventDateTime  >= $__fromTime AND eventDateTime <= $__toTime ) LIMIT 100",
+          "refId": "Anno"
+        }
+      }
+    ]
+  },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "links": [],
+  "panels": [
+    {
+      "datasource": {
+        "type": "grafana-clickhouse-datasource",
+        "uid": "fnm-clickhouse-datasource-uid"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "showValues": false,
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "bits"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 20,
+        "w": 11,
+        "x": 0,
+        "y": 0
+      },
+      "id": 4,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.4.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-clickhouse-datasource",
+            "uid": "fnm-clickhouse-datasource-uid"
+          },
+          "editorType": "sql",
+          "format": 0,
+          "meta": {
+            "builderOptions": {
+              "aggregates": [
+                {
+                  "aggregateType": "avg",
+                  "alias": "",
+                  "column": "bits_incoming"
+                }
+              ],
+              "columns": [
+                {
+                  "hint": "time",
+                  "name": "metricDateTime",
+                  "type": "DateTime"
+                }
+              ],
+              "database": "fastnetmon",
+              "filters": [
+                {
+                  "condition": "AND",
+                  "filterType": "custom",
+                  "hint": "time",
+                  "key": "metricDateTime",
+                  "operator": "WITH IN DASHBOARD TIME RANGE",
+                  "restrictToFields": [
+                    {
+                      "label": "metricDateTime",
+                      "name": "metricDateTime",
+                      "picklistValues": [],
+                      "type": "DateTime"
+                    }
+                  ],
+                  "type": "datetime"
+                }
+              ],
+              "groupBy": [
+                "asn_number"
+              ],
+              "limit": 0,
+              "mode": "trend",
+              "orderBy": [],
+              "queryType": "timeseries",
+              "table": "$protocol_version"
+            }
+          },
+          "pluginVersion": "4.14.0",
+          "queryType": "timeseries",
+          "rawSql": "SELECT $__timeInterval(metricDateTime) as time, concat(dictGetOrDefault('fastnetmon.asn_information', 'asn_name', asn_number, 'Unknown'), ' AS',toString(asn_number)), avg(multiIf('${protocol}' = 'total', bits_incoming, '${protocol}' = 'udp', udp_bits_incoming, '${protocol}' = 'tcp', tcp_bits_incoming, '${protocol}' = 'icmp', icmp_bits_incoming, '${protocol}' = 'fragmented', fragmented_bits_incoming, '${protocol}' = 'tcp_syn', tcp_syn_bits_incoming, 0)) as \" \" FROM \"fastnetmon\".\"$protocol_version\" WHERE asn_number in ( select asn_number from (\n\n  SELECT asn_number, sum(multiIf('${protocol}' = 'total', bits_incoming, '${protocol}' = 'udp', udp_bits_incoming, '${protocol}' = 'tcp', tcp_bits_incoming, '${protocol}' = 'icmp', icmp_bits_incoming, '${protocol}' = 'fragmented', fragmented_bits_incoming, '${protocol}' = 'tcp_syn', tcp_syn_bits_incoming, 0)) as length\n  FROM \"fastnetmon\".\"$protocol_version\"\n  WHERE $__timeFilter(metricDateTime) AND ( metricDateTime  >= $__fromTime AND metricDateTime <= $__toTime )\n  GROUP BY asn_number\n  ORDER BY length DESC\n  LIMIT 10\n)) and $__timeFilter(metricDateTime) AND   ( metricDateTime  >= $__fromTime AND metricDateTime <= $__toTime )\n GROUP BY asn_number, time ORDER BY time ASC ",
+          "refId": "A"
+        }
+      ],
+      "title": "Incoming traffic",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "grafana-clickhouse-datasource",
+        "uid": "fnm-clickhouse-datasource-uid"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "showValues": false,
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "bits"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 20,
+        "w": 13,
+        "x": 11,
+        "y": 0
+      },
+      "id": 5,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.4.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-clickhouse-datasource",
+            "uid": "fnm-clickhouse-datasource-uid"
+          },
+          "editorType": "sql",
+          "format": 0,
+          "meta": {
+            "builderOptions": {
+              "aggregates": [
+                {
+                  "aggregateType": "avg",
+                  "alias": "Bandwidth",
+                  "column": "bits_outgoing"
+                }
+              ],
+              "columns": [
+                {
+                  "hint": "time",
+                  "name": "metricDateTime",
+                  "type": "DateTime"
+                }
+              ],
+              "database": "fastnetmon",
+              "filters": [
+                {
+                  "condition": "AND",
+                  "filterType": "custom",
+                  "hint": "time",
+                  "key": "metricDateTime",
+                  "operator": "WITH IN DASHBOARD TIME RANGE",
+                  "restrictToFields": [
+                    {
+                      "label": "metricDateTime",
+                      "name": "metricDateTime",
+                      "picklistValues": [],
+                      "type": "DateTime"
+                    }
+                  ],
+                  "type": "datetime"
+                }
+              ],
+              "groupBy": [
+                "network"
+              ],
+              "limit": 0,
+              "mode": "trend",
+              "orderBy": [],
+              "queryType": "timeseries",
+              "table": "$protocol_version"
+            }
+          },
+          "pluginVersion": "4.14.0",
+          "queryType": "timeseries",
+          "rawSql": "SELECT $__timeInterval(metricDateTime) as time, concat(dictGetOrDefault('fastnetmon.asn_information', 'asn_name', asn_number, 'Unknown'), ' AS',toString(asn_number)), avg(multiIf (\n              '${protocol}' = 'total',\n              bits_outgoing,\n              '${protocol}' = 'udp',\n              udp_bits_outgoing,\n              '${protocol}' = 'tcp',\n              tcp_bits_outgoing,\n              '${protocol}' = 'icmp',\n              icmp_bits_outgoing,\n              '${protocol}' = 'fragmented',\n              fragmented_bits_outgoing,\n              '${protocol}' = 'tcp_syn',\n              tcp_syn_bits_outgoing,\n              0\n            )) as \" \" FROM \"fastnetmon\".\"$protocol_version\" WHERE asn_number in ( select asn_number from (\n\n  SELECT asn_number, sum(multiIf (\n              '${protocol}' = 'total',\n              bits_outgoing,\n              '${protocol}' = 'udp',\n              udp_bits_outgoing,\n              '${protocol}' = 'tcp',\n              tcp_bits_outgoing,\n              '${protocol}' = 'icmp',\n              icmp_bits_outgoing,\n              '${protocol}' = 'fragmented',\n              fragmented_bits_outgoing,\n              '${protocol}' = 'tcp_syn',\n              tcp_syn_bits_outgoing,\n              0\n            )) as length\n  FROM \"fastnetmon\".\"$protocol_version\"\n  WHERE $__timeFilter(metricDateTime) AND ( metricDateTime  >= $__fromTime AND metricDateTime <= $__toTime )\n  GROUP BY asn_number\n  ORDER BY length DESC\n  LIMIT 10\n)) and $__timeFilter(metricDateTime) AND   ( metricDateTime  >= $__fromTime AND metricDateTime <= $__toTime )\n GROUP BY asn_number, time ORDER BY time ASC ",
+          "refId": "A"
+        }
+      ],
+      "title": "Outgoing traffic",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "grafana-clickhouse-datasource",
+        "uid": "fnm-clickhouse-datasource-uid"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "showValues": false,
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "pps"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 20,
+        "w": 11,
+        "x": 0,
+        "y": 20
+      },
+      "id": 6,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.4.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-clickhouse-datasource",
+            "uid": "fnm-clickhouse-datasource-uid"
+          },
+          "editorType": "sql",
+          "format": 0,
+          "meta": {
+            "builderOptions": {
+              "aggregates": [
+                {
+                  "aggregateType": "avg",
+                  "alias": "",
+                  "column": "packets_incoming"
+                }
+              ],
+              "columns": [
+                {
+                  "hint": "time",
+                  "name": "metricDateTime",
+                  "type": "DateTime"
+                }
+              ],
+              "database": "fastnetmon",
+              "filters": [
+                {
+                  "condition": "AND",
+                  "filterType": "custom",
+                  "hint": "time",
+                  "key": "metricDateTime",
+                  "operator": "WITH IN DASHBOARD TIME RANGE",
+                  "restrictToFields": [
+                    {
+                      "label": "metricDateTime",
+                      "name": "metricDateTime",
+                      "picklistValues": [],
+                      "type": "DateTime"
+                    }
+                  ],
+                  "type": "datetime"
+                }
+              ],
+              "groupBy": [
+                "asn_number"
+              ],
+              "limit": 0,
+              "mode": "trend",
+              "orderBy": [],
+              "queryType": "timeseries",
+              "table": "$protocol_version"
+            }
+          },
+          "pluginVersion": "4.14.0",
+          "queryType": "timeseries",
+          "rawSql": "SELECT $__timeInterval(metricDateTime) as time, concat(dictGetOrDefault('fastnetmon.asn_information', 'asn_name', asn_number, 'Unknown'), ' AS',toString(asn_number)), avg(multiIf (\n              '${protocol}' = 'total',\n              packets_incoming,\n              '${protocol}' = 'udp',\n              udp_packets_incoming,\n              '${protocol}' = 'tcp',\n              tcp_packets_incoming,\n              '${protocol}' = 'icmp',\n              icmp_packets_incoming,\n              '${protocol}' = 'fragmented',\n              fragmented_packets_incoming,\n              '${protocol}' = 'tcp_syn',\n              tcp_syn_packets_incoming,\n              0\n            )) as \" \" FROM \"fastnetmon\".\"$protocol_version\" WHERE asn_number in ( select asn_number from (\n\n  SELECT asn_number, sum(multiIf (\n              '${protocol}' = 'total',\n              packets_incoming,\n              '${protocol}' = 'udp',\n              udp_packets_incoming,\n              '${protocol}' = 'tcp',\n              tcp_packets_incoming,\n              '${protocol}' = 'icmp',\n              icmp_packets_incoming,\n              '${protocol}' = 'fragmented',\n              fragmented_packets_incoming,\n              '${protocol}' = 'tcp_syn',\n              tcp_syn_packets_incoming,\n              0\n            )) as length\n  FROM \"fastnetmon\".\"$protocol_version\"\n  WHERE $__timeFilter(metricDateTime) AND ( metricDateTime  >= $__fromTime AND metricDateTime <= $__toTime )\n  GROUP BY asn_number\n  ORDER BY length DESC\n  LIMIT 10\n)) and $__timeFilter(metricDateTime) AND   ( metricDateTime  >= $__fromTime AND metricDateTime <= $__toTime )\n GROUP BY asn_number, time ORDER BY time ASC ",
+          "refId": "A"
+        }
+      ],
+      "title": "Incoming packet rate",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "grafana-clickhouse-datasource",
+        "uid": "fnm-clickhouse-datasource-uid"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "showValues": false,
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "pps"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 20,
+        "w": 13,
+        "x": 11,
+        "y": 20
+      },
+      "id": 7,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.4.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-clickhouse-datasource",
+            "uid": "fnm-clickhouse-datasource-uid"
+          },
+          "editorType": "sql",
+          "format": 0,
+          "meta": {
+            "builderOptions": {
+              "aggregates": [
+                {
+                  "aggregateType": "avg",
+                  "alias": "Rate",
+                  "column": "packets_outgoing"
+                }
+              ],
+              "columns": [
+                {
+                  "hint": "time",
+                  "name": "metricDateTime",
+                  "type": "DateTime"
+                }
+              ],
+              "database": "fastnetmon",
+              "filters": [
+                {
+                  "condition": "AND",
+                  "filterType": "custom",
+                  "hint": "time",
+                  "key": "metricDateTime",
+                  "operator": "WITH IN DASHBOARD TIME RANGE",
+                  "restrictToFields": [
+                    {
+                      "label": "metricDateTime",
+                      "name": "metricDateTime",
+                      "picklistValues": [],
+                      "type": "DateTime"
+                    }
+                  ],
+                  "type": "datetime"
+                }
+              ],
+              "groupBy": [
+                "network"
+              ],
+              "limit": 0,
+              "mode": "trend",
+              "orderBy": [],
+              "queryType": "timeseries",
+              "table": "$protocol_version"
+            }
+          },
+          "pluginVersion": "4.14.0",
+          "queryType": "timeseries",
+          "rawSql": "SELECT $__timeInterval(metricDateTime) as time, concat(dictGetOrDefault('fastnetmon.asn_information', 'asn_name', asn_number, 'Unknown'), ' AS',toString(asn_number)), avg(multiIf (\n              '${protocol}' = 'total',\n              packets_outgoing,\n              '${protocol}' = 'udp',\n              udp_packets_outgoing,\n              '${protocol}' = 'tcp',\n              tcp_packets_outgoing,\n              '${protocol}' = 'icmp',\n              icmp_packets_outgoing,\n              '${protocol}' = 'fragmented',\n              fragmented_packets_outgoing,\n              '${protocol}' = 'tcp_syn',\n              tcp_syn_packets_outgoing,\n              0\n            )) as \" \" FROM \"fastnetmon\".\"$protocol_version\" WHERE asn_number in ( select asn_number from (\n\n  SELECT asn_number, sum(multiIf (\n              '${protocol}' = 'total',\n              packets_outgoing,\n              '${protocol}' = 'udp',\n              udp_packets_outgoing,\n              '${protocol}' = 'tcp',\n              tcp_packets_outgoing,\n              '${protocol}' = 'icmp',\n              icmp_packets_outgoing,\n              '${protocol}' = 'fragmented',\n              fragmented_packets_outgoing,\n              '${protocol}' = 'tcp_syn',\n              tcp_syn_packets_outgoing,\n              0\n            )) as length\n  FROM \"fastnetmon\".\"$protocol_version\"\n  WHERE $__timeFilter(metricDateTime) AND ( metricDateTime  >= $__fromTime AND metricDateTime <= $__toTime )\n  GROUP BY asn_number\n  ORDER BY length DESC\n  LIMIT 10\n)) and $__timeFilter(metricDateTime) AND   ( metricDateTime  >= $__fromTime AND metricDateTime <= $__toTime )\n GROUP BY asn_number, time ORDER BY time ASC ",
+          "refId": "A"
+        }
+      ],
+      "title": "Outgoing packet rate",
+      "type": "timeseries"
+    }
+  ],
+  "preload": false,
+  "refresh": "5s",
+  "schemaVersion": 42,
+  "tags": [],
+  "templating": {
+    "list": [
+      {
+        "current": {
+          "text": "asn_metrics_ipv4",
+          "value": "asn_metrics_ipv4"
+        },
+        "description": "Version of IP protocol",
+        "includeAll": false,
+        "label": "Protocol Version",
+        "name": "protocol_version",
+        "options": [],
+        "query": "IPv4 : asn_metrics_ipv4, IPv6 : asn_metrics_ipv6",
+        "type": "custom",
+        "valuesFormat": "csv"
+      },
+      {
+        "allowCustomValue": false,
+        "current": {
+          "text": "udp",
+          "value": "udp"
+        },
+        "description": "",
+        "label": "Protocol",
+        "name": "protocol",
+        "options": [],
+        "query": "total, udp, tcp, icmp, frgmented, tcp_syn",
+        "type": "custom",
+        "valuesFormat": "csv"
+      }
+    ]
+  },
+  "time": {
+    "from": "now-15m",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "browser",
+  "title": "Per ASN traffic",
+  "uid": "1b72faf2-7281-4b57-9364-fec2ab04b2ef",
+  "version": 21,
+  "weekStart": ""
+}

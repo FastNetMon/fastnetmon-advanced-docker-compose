@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<yandex>
+     <merge_tree>
+         <max_suspicious_broken_parts>100</max_suspicious_broken_parts>
+     </merge_tree>
+</yandex>

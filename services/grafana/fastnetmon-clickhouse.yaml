@@ -1,0 +1,15 @@
+apiVersion: 1
+datasources:
+- orgId: 1
+  version: 1
+  name: Clickhouse official
+  type: grafana-clickhouse-datasource
+  uid: fnm-clickhouse-datasource-uid
+  jsonData:
+    defaultDatabase: fastnetmon
+    port: 9000
+    server: $CLICKHOUSE_GRAFANA_HOST
+    username: $CLICKHOUSE_GRAFANA_USER
+    tlsSkipVerify: false
+  secureJsonData:
+    password: $CLICKHOUSE_GRAFANA_PASSWORD

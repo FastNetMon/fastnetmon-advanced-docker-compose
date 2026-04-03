@@ -1,0 +1,15 @@
+/storage/*/data/*
+!/storage/*/data/.gitkeep
+
+/storage/*/logs/*
+!/storage/*/logs/.gitkeep
+
+
+/seeds/fastnetmon/*
+!/seeds/fastnetmon/.gitkeep
+
+secrets/*
+!secrets/.gitkeep
+!secrets/*.example
+
+/.env

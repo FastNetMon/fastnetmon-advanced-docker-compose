@@ -1,0 +1,35 @@
+services:
+  clickhouse:
+    secrets:
+      - clickhouse_grafana_password
+    environment:
+      GRAFANA_PASSWORD_FILE: /run/secrets/clickhouse_grafana_password
+      GRAFANA_USER: grafana
+
+  grafana:
+    image: grafana/grafana:13.0.0-23943897787-ubuntu
+    #container_name: fnm_grafana
+    restart: unless-stopped
+    networks:
+      - fastnetmon-network
+    depends_on:
+      - clickhouse
+    user: '0'
+    ports:
+      - 3000:3000
+    secrets:
+      - grafana_admin_password
+      - clickhouse_grafana_password
+    environment:
+      GF_PLUGINS_PREINSTALL: grafana-piechart-panel,grafana-clickhouse-datasource
+      GF_SECURITY_ADMIN_PASSWORD__FILE: /run/secrets/grafana_admin_password
+      CLICKHOUSE_GRAFANA_HOST: clickhouse
+      CLICKHOUSE_GRAFANA_USER: grafana
+      CLICKHOUSE_GRAFANA_PASSWORD: ""
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ${FNM_PATH}/services/grafana/fastnetmon.yaml:/etc/grafana/provisioning/dashboards/fastnetmon.yaml:ro
+      - ${FNM_PATH}/services/grafana/fastnetmon-clickhouse.yaml:/etc/grafana/provisioning/datasources/fastnetmon-clickhouse.yaml:ro
+      - ${FNM_PATH}/services/grafana/custom-run.sh:/custom-run.sh:ro
+      - ${FNM_PATH}/seeds/grafana/fastnetmon_dashboards:/srv/fastnetmon_dashboards
+    entrypoint: [ "/bin/bash", "/custom-run.sh" ]

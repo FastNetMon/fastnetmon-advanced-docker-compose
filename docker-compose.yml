@@ -1,0 +1,45 @@
+include:
+  - volumes.yml
+  - networks.yml
+  - secrets.yml
+
+services:
+  mongo:
+    # https://hub.docker.com/_/mongo
+    image: mongo:8.2
+    networks:
+      - fastnetmon-network
+    restart: unless-stopped
+    volumes:
+      - mongodb_data:/data/db
+    secrets:
+      - mongo_password
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: administrator
+      MONGO_INITDB_ROOT_PASSWORD_FILE: /run/secrets/mongo_password
+
+  fastnetmon:
+    image: fastnetmonltd/fastnetmon-advanced:latest
+    restart: unless-stopped
+    networks:
+      - fastnetmon-network
+    secrets:
+      - source: mongo_password
+        target: /etc/fastnetmon/keychain/.mongo_fastnetmon_password
+    cap_add:
+      - NET_ADMIN
+      - CAP_IPC_LOCK
+    depends_on:
+      - mongo
+    environment:
+      MONGO_USERNAME: administrator
+      MONGO_HOST: mongo
+      FNM_ARGS: --log_to_console
+    volumes:
+      - fastnetmon_logs:/var/log/fastnetmon/
+      - ${FNM_PATH}/services/fastnetmon/custom-entry.sh:/custom-entry.sh:ro
+      - ${FNM_PATH}/seeds/fastnetmon/:/etc/fastnetmon/
+    ports:
+      - 6343:6343/udp
+      - 2055:2055/udp
+    entrypoint: [ "/bin/bash", "/custom-entry.sh" ]

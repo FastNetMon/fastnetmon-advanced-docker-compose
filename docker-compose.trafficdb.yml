@@ -1,0 +1,21 @@
+services:
+  fastnetmon:
+    environment:
+      TRAFFICDB_ENABLED: true
+      TRAFFICDB_HOST: trafficdb
+  trafficdb:
+    image: fastnetmonltd/fastnetmon-advanced:latest
+    restart: unless-stopped
+    depends_on:
+      - clickhouse
+    networks:
+      - fastnetmon-network
+    secrets:
+      - clickhouse_password
+    environment:
+      CLICKHOUSE_HOST: clickhouse
+      CLICKHOUSE_USER: fastnetmon
+      CLICKHOUSE_PASSWORD_FILE: /run/secrets/clickhouse_password
+    volumes:
+      - ${FNM_PATH}/services/trafficdb/custom-entry.sh:/custom-entry.sh:ro
+    entrypoint: [ "/bin/bash", "/custom-entry.sh" ]

@@ -1,4 +1,3 @@
 networks:
   fastnetmon-network:
      enable_ipv6: true
-     name: fastnetmon-network

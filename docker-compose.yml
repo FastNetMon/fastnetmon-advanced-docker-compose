@@ -19,7 +19,7 @@ services:
       MONGO_INITDB_ROOT_PASSWORD_FILE: /run/secrets/mongo_password
 
   fastnetmon:
-    image: fastnetmonltd/fastnetmon-advanced:latest
+    image: fastnetmonltd/fastnetmon-advanced:${FNM_VERSION:-latest}
     restart: unless-stopped
     networks:
       - fastnetmon-network

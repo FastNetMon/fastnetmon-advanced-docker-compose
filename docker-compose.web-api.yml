@@ -1,0 +1,19 @@
+services:
+  fastnetmon:
+    ports:
+      - 10007:10007/tcp
+
+  fastnetmon_web_api:
+    image: fastnetmonltd/fastnetmon-advanced:${FNM_VERSION:-latest}
+    restart: unless-stopped
+    depends_on:
+      - fastnetmon
+    network_mode: "service:fastnetmon"
+    environment:
+      HTTP_API_MODE: on
+    entrypoint: /opt/fastnetmon/app/bin/fcli
+    secrets:
+      - source: mongo_password
+        target: /etc/fastnetmon/keychain/.mongo_fastnetmon_password
+    volumes:
+      - ${FNM_PATH}/seeds/fastnetmon/:/etc/fastnetmon/:ro

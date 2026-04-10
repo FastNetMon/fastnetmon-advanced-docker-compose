@@ -11,7 +11,6 @@ services:
   clickhouse:
     # https://hub.docker.com/_/clickhouse
     image: clickhouse:26.3
-    #container_name: fnm_clickhouse
     restart: unless-stopped
     networks:
       - fastnetmon-network

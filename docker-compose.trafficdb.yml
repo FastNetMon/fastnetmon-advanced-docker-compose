@@ -4,7 +4,7 @@ services:
       TRAFFICDB_ENABLED: true
       TRAFFICDB_HOST: trafficdb
   trafficdb:
-    image: fastnetmonltd/fastnetmon-advanced:latest
+    image: fastnetmonltd/fastnetmon-advanced:${FNM_VERSION:-latest}
     restart: unless-stopped
     depends_on:
       - clickhouse

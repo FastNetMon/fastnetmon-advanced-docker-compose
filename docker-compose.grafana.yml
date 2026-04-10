@@ -8,7 +8,6 @@ services:
 
   grafana:
     image: grafana/grafana:13.0.0-23943897787-ubuntu
-    #container_name: fnm_grafana
     restart: unless-stopped
     networks:
       - fastnetmon-network

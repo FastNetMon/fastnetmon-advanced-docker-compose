@@ -21,7 +21,7 @@ if grep -q "Configuration is correct" <<< "$OUTPUT"; then
     echo "Config already present, continuing"
 elif grep -q "Can't load configuration from configuration source" <<< "$OUTPUT"; then
     echo "Cannot load config - looks like first start - create config"
-    /usr/bin/fcli create_configuration
+    HTTP_API_MODE=off OFFLINE_MODE=on /usr/bin/fcli create_configuration
 #else
 #    echo "$OUTPUT"
 #    exit 1
@@ -30,21 +30,21 @@ fi
 # Enable clickhouse config
 if [[ -f $CLICKHOUSE_PASSWORD_FILE ]]; then
     export CLICKHOUSE_PASSWORD="$(< ${CLICKHOUSE_PASSWORD_FILE})"
-    /usr/bin/fcli set main clickhouse_metrics_host ${CLICKHOUSE_HOST}
-    /usr/bin/fcli set main clickhouse_metrics_username ${CLICKHOUSE_USER}
-    /usr/bin/fcli set main clickhouse_metrics_password ${CLICKHOUSE_PASSWORD}
-    /usr/bin/fcli set main clickhouse_metrics true
+    HTTP_API_MODE=off OFFLINE_MODE=on /usr/bin/fcli set main clickhouse_metrics_host ${CLICKHOUSE_HOST}
+    HTTP_API_MODE=off OFFLINE_MODE=on /usr/bin/fcli set main clickhouse_metrics_username ${CLICKHOUSE_USER}
+    HTTP_API_MODE=off OFFLINE_MODE=on /usr/bin/fcli set main clickhouse_metrics_password ${CLICKHOUSE_PASSWORD}
+    HTTP_API_MODE=off OFFLINE_MODE=on /usr/bin/fcli set main clickhouse_metrics true
 else
-    /usr/bin/fcli set main clickhouse_metrics false
+    HTTP_API_MODE=off OFFLINE_MODE=on /usr/bin/fcli set main clickhouse_metrics false
 fi
 
 # Enable traffic_db config
 if [[ "${TRAFFICDB_ENABLED:-false}" == "true" ]]; then
-    /usr/bin/fcli set main traffic_db_host ${TRAFFICDB_HOST}
-    /usr/bin/fcli set main traffic_db_port 8100
-    /usr/bin/fcli set main traffic_db enable
+    HTTP_API_MODE=off OFFLINE_MODE=on /usr/bin/fcli set main traffic_db_host ${TRAFFICDB_HOST}
+    HTTP_API_MODE=off OFFLINE_MODE=on /usr/bin/fcli set main traffic_db_port 8100
+    HTTP_API_MODE=off OFFLINE_MODE=on /usr/bin/fcli set main traffic_db enable
 else
-    /usr/bin/fcli set main traffic_db false
+    HTTP_API_MODE=off OFFLINE_MODE=on /usr/bin/fcli set main traffic_db false
 fi
 
 exec /opt/fastnetmon/app/bin/fastnetmon $FNM_ARGS

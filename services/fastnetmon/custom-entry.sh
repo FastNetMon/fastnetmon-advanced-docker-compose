@@ -47,4 +47,27 @@ else
     HTTP_API_MODE=off OFFLINE_MODE=on /usr/bin/fcli set main traffic_db false
 fi
 
+if [[ "${WEB_API_V2:-false}" == "true" ]]; then
+    HTTP_API_MODE=off OFFLINE_MODE=on /usr/bin/fcli set main web_api_v2 true
+    HTTP_API_MODE=off OFFLINE_MODE=on /usr/bin/fcli set main mongo_store_attack_information true
+else
+    HTTP_API_MODE=off OFFLINE_MODE=on /usr/bin/fcli set main web_api_v2 false
+fi
+
+WEB_API_PASSWORD_FILE=${WEB_API_PASSWORD_FILE:-/run/secrets/web_api_admin_password}
+if [[ -f $WEB_API_PASSWORD_FILE ]]; then
+    export WEB_API_PASSWORD="$(< ${WEB_API_PASSWORD_FILE})"
+    HTTP_API_MODE=off OFFLINE_MODE=on /usr/bin/fcli set main web_api_host 0.0.0.0
+    HTTP_API_MODE=off OFFLINE_MODE=on /usr/bin/fcli set main web_api_port 10007
+    if  [[ "${WEB_API_V2:-false}" == "true" ]]; then
+        echo "Enable web api user"
+        HTTP_API_MODE=off OFFLINE_MODE=on /usr/bin/fcli set user ${WEB_API_USER:-admin}
+        HTTP_API_MODE=off OFFLINE_MODE=on /usr/bin/fcli set user ${WEB_API_USER:-admin} password $WEB_API_PASSWORD
+    else
+        echo "Enable web api login  ${WEB_API_USER:-admin}  ${WEB_API_PASSWORD}"
+        HTTP_API_MODE=off OFFLINE_MODE=on /usr/bin/fcli set main web_api_login ${WEB_API_USER:-admin}
+        HTTP_API_MODE=off OFFLINE_MODE=on /usr/bin/fcli set main web_api_password ${WEB_API_PASSWORD}
+    fi
+fi
+
 exec /opt/fastnetmon/app/bin/fastnetmon $FNM_ARGS

@@ -11,6 +11,12 @@ volumes:
       o: bind
       device: "${FNM_PATH}/storage/fastnetmon/logs"
 
+  fastnetmon_web_api_logs:
+    driver_opts:
+      type: none
+      o: bind
+      device: "${FNM_PATH}/storage/fastnetmon_web_api/logs"
+
   clickhouse_data:
     driver_opts:
       type: none

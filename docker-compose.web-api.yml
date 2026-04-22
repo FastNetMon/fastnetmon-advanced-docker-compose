@@ -2,6 +2,12 @@ services:
   fastnetmon:
     ports:
       - 10007:10007/tcp
+    environment:
+      WEB_API_V2: ${FNM_WEB_API_V2:-true}
+      WEB_API_USER: admin
+      WEB_API_PASSWORD_FILE: /run/secrets/web_api_admin_password
+    secrets:
+      - web_api_admin_password
 
   fastnetmon_web_api:
     image: fastnetmonltd/fastnetmon-advanced:${FNM_VERSION:-latest}
@@ -17,3 +23,4 @@ services:
         target: /etc/fastnetmon/keychain/.mongo_fastnetmon_password
     volumes:
       - ${FNM_PATH}/seeds/fastnetmon/:/etc/fastnetmon/:ro
+      - fastnetmon_web_api_logs:/var/log/fastnetmon/

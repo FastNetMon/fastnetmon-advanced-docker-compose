@@ -49,6 +49,12 @@ Secretes in `secrets/`  and can be generated with `init_secrets.sh` scripts.
 After all previose step configured there should be enought to run
 
 ```bash
+docker compose up -d 
+```
+
+If user not in docker group, than all command need `sudo -E` to lose ENV variables, like
+
+```bash
 sudo -E docker compose up -d 
 ```
 
@@ -57,10 +63,15 @@ sudo -E docker compose up -d
 Following instruction for configuration need to change all  
 `sudo fcli $COMMAND`  
 to  
-`sudo -E docker compose exec fastnetmon fcli $COMMAND` .
+`docker compose exec fastnetmon fcli $COMMAND` .
 
 Except for `sudo fcli commit` - instaed of commit we restart service now  
 
 ```bash
-sudo -E docker compose restart fastnetmon
+docker compose restart fastnetmon
 ```
+
+## Logs notice ##
+
+Where possible for now logs send to stdout/stderr to appear at `docker conpose logs`, but some still stored in volumes.  
+By default logs for services would be lost after `docker compose down` - could be good to setup `/etc/docker/daemon.json` for journald or remoute collector - <https://docs.docker.com/engine/logging/configure/>

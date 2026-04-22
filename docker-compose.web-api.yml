@@ -13,7 +13,8 @@ services:
     image: fastnetmonltd/fastnetmon-advanced:${FNM_VERSION:-latest}
     restart: unless-stopped
     depends_on:
-      - fastnetmon
+      fastnetmon:
+        condition: service_healthy
     network_mode: "service:fastnetmon"
     environment:
       HTTP_API_MODE: on

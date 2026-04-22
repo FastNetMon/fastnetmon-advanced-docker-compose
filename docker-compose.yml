@@ -17,6 +17,12 @@ services:
     environment:
       MONGO_INITDB_ROOT_USERNAME: administrator
       MONGO_INITDB_ROOT_PASSWORD_FILE: /run/secrets/mongo_password
+    healthcheck:
+      test: [ "CMD", "mongosh", "--eval", "db.adminCommand('ping')", "--quiet" ]
+      interval: 1m30s
+      timeout: 30s
+      retries: 5
+      start_period: 40s
 
   fastnetmon:
     image: fastnetmonltd/fastnetmon-advanced:${FNM_VERSION:-latest}
@@ -30,7 +36,8 @@ services:
       - NET_ADMIN
       - CAP_IPC_LOCK
     depends_on:
-      - mongo
+      mongo:
+        condition: service_healthy
     environment:
       MONGO_USERNAME: administrator
       MONGO_HOST: mongo
@@ -43,3 +50,9 @@ services:
       - 6343:6343/udp
       - 2055:2055/udp
     entrypoint: [ "/bin/bash", "/custom-entry.sh" ]
+    healthcheck:
+      test: [ "CMD", "/opt/fastnetmon/app/bin/fcli", "show", "system_counters" ]
+      interval: 1m30s
+      timeout: 30s
+      retries: 5
+      start_period: 30s

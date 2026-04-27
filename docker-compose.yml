@@ -42,6 +42,7 @@ services:
       MONGO_USERNAME: administrator
       MONGO_HOST: mongo
       FNM_ARGS: --log_to_console
+      FNM_NOT_UPLOAD_ASN_MAPPING: ${FNM_NOT_UPLOAD_ASN_MAPPING:-false}
     volumes:
       - fastnetmon_logs:/var/log/fastnetmon/
       - ${FNM_PATH}/services/fastnetmon/custom-entry.sh:/custom-entry.sh:ro

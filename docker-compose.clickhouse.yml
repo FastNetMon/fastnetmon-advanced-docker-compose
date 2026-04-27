@@ -8,6 +8,8 @@ services:
       CLICKHOUSE_HOST: clickhouse
       CLICKHOUSE_USER: fastnetmon
       CLICKHOUSE_PASSWORD_FILE: /run/secrets/clickhouse_password
+    volumes:
+      - ${FNM_PATH}/seeds/clickhouse/user_files:/var/lib/clickhouse/user_files
   clickhouse:
     # https://hub.docker.com/_/clickhouse
     image: clickhouse:26.3

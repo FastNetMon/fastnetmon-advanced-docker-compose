@@ -12,6 +12,8 @@ We set there variables
 
 - `FNM_PATH` - path to our docker compose files.
 - `FNM_VERSION` - **FastNetMon** version to install via Docker tags.
+- `FNM_WEB_API_V2` - switch between old syle web API and new
+- `FNM_NOT_UPLOAD_ASN_MAPPING` - disable upload [asn mapping](https://fastnetmon.com/fastnetmon-asn-peering-reports/)
 - `COMPOSE_PROJECT_NAME`  - project name( will be prefix for containers names ).
 - `COMPOSE_FILE` - declare what components will be used.  
 

@@ -64,10 +64,18 @@ if [[ -f $WEB_API_PASSWORD_FILE ]]; then
         HTTP_API_MODE=off OFFLINE_MODE=on /usr/bin/fcli set user ${WEB_API_USER:-admin}
         HTTP_API_MODE=off OFFLINE_MODE=on /usr/bin/fcli set user ${WEB_API_USER:-admin} password $WEB_API_PASSWORD
     else
-        echo "Enable web api login  ${WEB_API_USER:-admin}  ${WEB_API_PASSWORD}"
+        echo "Enable web api login"
+        #echo "Enable web api login  ${WEB_API_USER:-admin}  ${WEB_API_PASSWORD}"
         HTTP_API_MODE=off OFFLINE_MODE=on /usr/bin/fcli set main web_api_login ${WEB_API_USER:-admin}
         HTTP_API_MODE=off OFFLINE_MODE=on /usr/bin/fcli set main web_api_password ${WEB_API_PASSWORD}
     fi
+fi
+
+FNM_NOT_UPLOAD_ASN_MAPPING="${FNM_NOT_UPLOAD_ASN_MAPPING:-false}"
+if [[ "${FNM_NOT_UPLOAD_ASN_MAPPING}" != "true" ]]; then
+    echo "Download ASN mapping"
+    mkdir -p /var/lib/clickhouse/user_files
+    /opt/fastnetmon/app/bin/fill_dictionaries
 fi
 
 exec /opt/fastnetmon/app/bin/fastnetmon $FNM_ARGS

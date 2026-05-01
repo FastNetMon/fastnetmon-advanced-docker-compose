@@ -52,8 +52,8 @@ services:
       - 2055:2055/udp
     entrypoint: [ "/bin/bash", "/custom-entry.sh" ]
     healthcheck:
-      test: [ "CMD", "/opt/fastnetmon/app/bin/fcli", "show", "system_counters" ]
-      interval: 1m30s
-      timeout: 30s
-      retries: 5
+      test: [ "CMD-SHELL", "/opt/fastnetmon/app/bin/fcli show system_counters | grep -q fastnetmon_version" ]
+      interval: 5s
+      timeout: 10s
+      retries: 40
       start_period: 30s

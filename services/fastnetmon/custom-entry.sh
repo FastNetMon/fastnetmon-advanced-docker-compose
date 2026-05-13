@@ -27,6 +27,11 @@ elif grep -q "Can't load configuration from configuration source" <<< "$OUTPUT";
 #    exit 1
 fi
 
+if [[ ${FNM_GOBGP_HOST} != "" ]]; then
+     HTTP_API_MODE=off OFFLINE_MODE=on /usr/bin/fcli set main gobgp_api_host ${FNM_GOBGP_HOST}
+     HTTP_API_MODE=off OFFLINE_MODE=on /usr/bin/fcli set main gobgp enable
+fi
+
 # Enable clickhouse config
 if [[ -f $CLICKHOUSE_PASSWORD_FILE ]]; then
     export CLICKHOUSE_PASSWORD="$(< ${CLICKHOUSE_PASSWORD_FILE})"

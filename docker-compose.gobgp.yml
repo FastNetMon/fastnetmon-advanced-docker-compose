@@ -1,0 +1,18 @@
+services:
+  fastnetmon:
+    environment:
+      FNM_GOBGP_HOST: gobgp
+
+  gobgp:
+    image: fastnetmonltd/fastnetmon-advanced:${FNM_VERSION:-latest}
+    restart: unless-stopped
+    networks:
+      - fastnetmon-network
+    volumes:
+      - ${FNM_PATH}/seeds/fastnetmon/:/etc/fastnetmon/:ro
+    ports:
+      - 179:179/tcp
+    depends_on:
+      fastnetmon:
+        condition: service_healthy
+    command: [ "/usr/sbin/gobgpd", "-f", "/etc/fastnetmon/gobgpd.conf", "--api-hosts=0.0.0.0:50051", "--log-plain" ]

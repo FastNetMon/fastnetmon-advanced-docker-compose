@@ -34,10 +34,11 @@ COMPOSE_FILE=docker-compose.yml:docker-compose.clickhouse.yml:docker-compose.gra
 Components by file
 
 - docker-compose.yml - minimal base FNM (only FastNetMon and MongoDB)
+- docker-compose.gobgp.yml - Add GoBGP daemon
 - docker-compose.clickhouse.yml - Add clickhouse for saving metrics
 - docker-compose.grafana.yml - Add grafana for [traffic visualisation](https://fastnetmon.com/docs-fnm-advanced/advanced-visual-traffic/)(need enabled clickhouse)
 - docker-compose.trafficdb.yml  - enable [traffic persistence](https://fastnetmon.com/docs-fnm-advanced/fastnetmon-advanced-traffic-persistency/)(need enabled clickhouse)
-- docker-compose.web-api.yml  - start [web API](https://fastnetmon.com/docs-fnm-advanced/advanced-api/) or with FNM_WEB_API_V2=true start [web UI](https://fastnetmon.com/docs-fnm-advanced/fastnetmon-panel-ui-installation/)
+- docker-compose.web-api.yml  - start [web API](https://fastnetmon.com/docs-fnm-advanced/advanced-api/) or with FNM_WEB_API_V2=true start [LiveView](https://fastnetmon.com/docs-fnm-advanced/fastnetmon-panel-ui-installation/)
 
 ### Configure volumes and secrets ###
 

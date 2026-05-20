@@ -1,0 +1,77 @@
+name: run docker compose
+
+on:
+  workflow_call:
+    inputs:
+      runner:
+        type: string
+        default: ubuntu-24.04
+      compose_file:
+        type: string
+        default: docker-compose.yml
+        required: true
+      #path:
+      #  type: string
+      #  default: ${PWD}
+      version:
+        type: string
+        default: latest
+      api_v2:
+        type: boolean
+        default: false
+      upload_mapping:
+        type: boolean
+        default: false
+      project_name:
+        type: string
+        default: fnm
+
+
+jobs:
+  run_test:
+    runs-on: ${{ inputs.runner}}
+    env:
+      DEBIAN_FRONTEND: noninteractive
+      COMPOSE_FILE: ${{ inputs.compose_file}}   
+      FNM_VERSION: ${{ inputs.version}}
+      FNM_WEB_API_V2: ${{ inputs.api_v2}}
+      FNM_NOT_UPLOAD_ASN_MAPPING: ${{ inputs.upload_mapping}}
+      COMPOSE_PROJECT_NAME: ${{ inputs.project_name}}
+      FNM_PATH: ${{ github.workspace }}
+
+
+    steps:
+        - uses: actions/checkout@v6
+        - run: apt update && apt install -y pwgen
+        - name: Generate .env file
+          env:
+            FNM_PATH: ${{ github.workspace }}
+          run: |
+            cat > .env << EOF
+            FNM_PATH=${{ github.workspace }}
+            FNM_VERSION=${{ env.FNM_VERSION}}
+            FNM_WEB_API_V2=${{ env.FNM_WEB_API_V2}}
+            FNM_NOT_UPLOAD_ASN_MAPPING=${{ env.FNM_NOT_UPLOAD_ASN_MAPPING}}
+
+            COMPOSE_PROJECT_NAME=${{ env.COMPOSE_PROJECT_NAME}}
+            COMPOSE_FILE=${{ env.COMPOSE_FILE}}
+            EOF
+            cat .env
+            echo -e "${FNM_PATH}"
+        - run:  docker compose config
+        - name: Pull images
+          run: docker compose pull
+        - name: Clean volumes
+          run: docker compose down --volumes --remove-orphans || true
+        - name: Remove storage dir
+          run: rm -rf ./storages 
+        - name: Init secrets
+          run: ./init_secrets.sh
+        - name: Recreate volumes
+          run: ./create_storage_default_dirs.sh
+        - name: Run docker compose
+          run: docker compose up -d --wait
+        - run: docker compose ps -a
+        - run: docker compose logs
+
+

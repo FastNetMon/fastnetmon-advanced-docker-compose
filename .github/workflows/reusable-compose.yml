@@ -42,7 +42,7 @@ jobs:
 
     steps:
         - uses: actions/checkout@v6
-        - run: apt update && apt install -y pwgen
+        - run: sudo apt update && sudo apt install -y pwgen
         - name: Generate .env file
           env:
             FNM_PATH: ${{ github.workspace }}

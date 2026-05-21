@@ -1,0 +1,33 @@
+name: test docker compose
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+ # schedule:
+ #   - cron: "0 2 * * *" # UTC
+
+
+
+jobs:
+    run_tests:
+        name: ${{ matrix.name }}
+        uses: ./.github/workflows/reusable-compose.yml
+        strategy:
+          fail-fast: false
+          matrix:
+            include:
+                - name: Minimal test
+                  compose_file: docker-compose.yml
+
+                - name: All comopose files test
+                  compose_file: docker-compose.yml:docker-compose.gobgp.yml:docker-compose.clickhouse.yml:docker-compose.grafana.yml:docker-compose.trafficdb.yml:docker-compose.web-api.yml:docker-compose.gobgp.yml
+        with:
+            runner: ${{ matrix.runner || 'ubuntu-24.04'}}
+            compose_file: ${{ matrix.compose_file }}
+            version: ${{ matrix.version || 'latest' }}
+            api_v2: ${{ matrix.api_v2 || false }}
+            upload_mapping: ${{ matrix.upload_mapping || false}}
+            project_name: ${{ matrix.project_name || 'fnm' }}
+
+

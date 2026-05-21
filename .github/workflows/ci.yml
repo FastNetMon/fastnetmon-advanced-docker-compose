@@ -19,6 +19,9 @@ jobs:
             include:
                 - name: Minimal test
                   compose_file: docker-compose.yml
+
+                - name: All comopose files test
+                  compose_file: docker-compose.yml:docker-compose.gobgp.yml:docker-compose.clickhouse.yml:docker-compose.grafana.yml:docker-compose.trafficdb.yml:docker-compose.web-api.yml:docker-compose.gobgp.yml
         with:
             runner: ${{ matrix.runner || 'ubuntu-24.04'}}
             compose_file: ${{ matrix.compose_file }}

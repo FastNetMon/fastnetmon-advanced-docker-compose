@@ -72,6 +72,6 @@ jobs:
         - name: Run docker compose
           run: docker compose up -d --wait
         - run: docker compose ps -a
-        - run: docker compose logs
+        - run: docker compose logs fastnetmon
 
 

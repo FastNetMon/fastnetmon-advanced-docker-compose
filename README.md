@@ -1,5 +1,11 @@
 # Docker compose for FastNetMon Advanced #
 
+## Warning ##
+
+This deployment method is currently experimental and intended for testing and evaluation purposes only.
+
+It is not recommended for production use at this time.
+
 ## Install ##
 
 Clone repo.
@@ -28,7 +34,7 @@ COMPOSE_FILE=docker-compose.ym
 Most full example
 
 ```bash
-COMPOSE_FILE=docker-compose.yml:docker-compose.clickhouse.yml:docker-compose.grafana.yml:docker-compose.trafficdb.yml:docker-compose.web-api.yml
+COMPOSE_FILE=docker-compose.yml:docker-compose.clickhouse.yml:docker-compose.grafana.yml:docker-compose.trafficdb.yml:docker-compose.web-api.yml:docker-compose.gobgp.yml
 ```
 
 Components by file

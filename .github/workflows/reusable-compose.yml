@@ -26,6 +26,8 @@ on:
         type: string
         default: fnm
 
+permissions:
+  contents: read
 
 jobs:
   run_test:

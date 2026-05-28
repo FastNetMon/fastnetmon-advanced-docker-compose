@@ -7,7 +7,8 @@ on:
  # schedule:
  #   - cron: "0 2 * * *" # UTC
 
-
+permissions:
+  contents: read
 
 jobs:
     run_tests:

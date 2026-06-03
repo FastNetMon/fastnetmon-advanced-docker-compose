@@ -1,0 +1,22 @@
+services:
+
+  mongo:
+    image: ghcr.io/ferretdb/ferretdb:1.20.1
+    networks:
+      - fastnetmon-network
+    restart: unless-stopped
+    environment:
+      FERRETDB_HANDLER: sqlite
+    healthcheck:
+      disable: true
+    command: [ "--handler=sqlite", "--sqlite-url", "file:/var/lib/ferretdb/" ]
+    volumes:
+      - mongodb_data:/var/lib/ferretdb
+
+  fastnetmon:
+    depends_on:
+      mongo:
+        condition: service_started
+
+    environment:
+      FERRETDB_ENABLED: true

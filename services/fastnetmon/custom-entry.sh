@@ -4,6 +4,16 @@
 # Generate MongoDB config
 MONGO_HOST="${MONGO_HOST:-mongo}"
 MONGO_USERNAME="${MONGO_USERNAME:-administrator}"
+
+if [[ "${FERRETDB_ENABLED}" == "true" ]]; then
+cat > /etc/fastnetmon/fastnetmon.conf <<EOF
+{
+"mongodb_host": "${MONGO_HOST}",
+"mongodb_port": 27017,
+"mongodb_username": ""
+}
+EOF
+else
 cat > /etc/fastnetmon/fastnetmon.conf <<EOF
 {
 "mongodb_host": "${MONGO_HOST}",
@@ -13,6 +23,7 @@ cat > /etc/fastnetmon/fastnetmon.conf <<EOF
 "mongodb_auth_source": "admin"
 }
 EOF
+fi
 
 OUTPUT="$(/opt/fastnetmon/app/bin/fastnetmon --configuration_check --log_to_console)"
 

@@ -99,6 +99,7 @@ if [[ "${FASTNETMON_DO_NOT_CALCULATE_SPEED}" == "1" ]];then
     HTTP_API_MODE=off OFFLINE_MODE=on /usr/bin/fcli set main keep_traffic_counters_during_restart true
     HTTP_API_MODE=off OFFLINE_MODE=on /usr/bin/fcli set main ipv4_automatic_data_cleanup disable
     HTTP_API_MODE=off OFFLINE_MODE=on /usr/bin/fcli set main ipv6_automatic_data_cleanup disable
+    HTTP_API_MODE=off OFFLINE_MODE=on /usr/bin/fcli set main ipv4_remote_automatic_data_cleanup disable
 fi
 
 FNM_NOT_UPLOAD_ASN_MAPPING="${FNM_NOT_UPLOAD_ASN_MAPPING:-false}"

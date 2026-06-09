@@ -38,9 +38,14 @@ elif grep -q "Can't load configuration from configuration source" <<< "$OUTPUT";
 #    exit 1
 fi
 
+if [[ "${FNM_IMPORT_CONFIGURATION_PATH}" != "" ]]; then
+    echo "Import configuration from ${FNM_IMPORT_CONFIGURATION_PATH}"
+    HTTP_API_MODE=off OFFLINE_MODE=on /usr/bin/fcli import_configuration  ${FNM_IMPORT_CONFIGURATION_PATH}
+fi
+
 if [[ ${FNM_GOBGP_HOST} != "" ]]; then
-     HTTP_API_MODE=off OFFLINE_MODE=on /usr/bin/fcli set main gobgp_api_host ${FNM_GOBGP_HOST}
-     HTTP_API_MODE=off OFFLINE_MODE=on /usr/bin/fcli set main gobgp enable
+    HTTP_API_MODE=off OFFLINE_MODE=on /usr/bin/fcli set main gobgp_api_host ${FNM_GOBGP_HOST}
+    HTTP_API_MODE=off OFFLINE_MODE=on /usr/bin/fcli set main gobgp enable
 fi
 
 # Enable clickhouse config
@@ -85,6 +90,16 @@ if [[ -f $WEB_API_PASSWORD_FILE ]]; then
         HTTP_API_MODE=off OFFLINE_MODE=on /usr/bin/fcli set main web_api_login ${WEB_API_USER:-admin}
         HTTP_API_MODE=off OFFLINE_MODE=on /usr/bin/fcli set main web_api_password ${WEB_API_PASSWORD}
     fi
+fi
+
+if [[ "${FASTNETMON_DO_NOT_CALCULATE_SPEED}" == "1" ]];then
+    echo "Disable calculation for fastnetmon"
+    HTTP_API_MODE=off OFFLINE_MODE=on /usr/bin/fcli set main keep_blocked_hosts_during_restart true
+    HTTP_API_MODE=off OFFLINE_MODE=on /usr/bin/fcli set main keep_flow_spec_announces_during_restart true
+    HTTP_API_MODE=off OFFLINE_MODE=on /usr/bin/fcli set main keep_traffic_counters_during_restart true
+    HTTP_API_MODE=off OFFLINE_MODE=on /usr/bin/fcli set main ipv4_automatic_data_cleanup disable
+    HTTP_API_MODE=off OFFLINE_MODE=on /usr/bin/fcli set main ipv6_automatic_data_cleanup disable
+    HTTP_API_MODE=off OFFLINE_MODE=on /usr/bin/fcli set main ipv4_remote_automatic_data_cleanup disable
 fi
 
 FNM_NOT_UPLOAD_ASN_MAPPING="${FNM_NOT_UPLOAD_ASN_MAPPING:-false}"

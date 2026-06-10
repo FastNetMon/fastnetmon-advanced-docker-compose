@@ -10,7 +10,7 @@ services:
       - web_api_admin_password
 
   fastnetmon_web_api:
-    image: fastnetmonltd/fastnetmon-advanced:${FNM_VERSION:-latest}
+    image: fastnetmon/fastnetmon-advanced:${FNM_VERSION:-latest}
     restart: unless-stopped
     depends_on:
       fastnetmon:

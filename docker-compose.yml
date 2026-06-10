@@ -25,7 +25,7 @@ services:
       start_period: 40s
 
   fastnetmon:
-    image: fastnetmonltd/fastnetmon-advanced:${FNM_VERSION:-latest}
+    image: fastnetmon/fastnetmon-advanced:${FNM_VERSION:-latest}
     restart: unless-stopped
     networks:
       - fastnetmon-network

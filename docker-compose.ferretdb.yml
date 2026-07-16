@@ -1,6 +1,6 @@
 services:
 
-  mongo:
+  ferretdb:
     image: ghcr.io/ferretdb/ferretdb:1.20.1
     networks:
       - fastnetmon-network
@@ -15,8 +15,8 @@ services:
 
   fastnetmon:
     depends_on:
-      mongo:
+      ferretdb:
         condition: service_started
-
     environment:
       FERRETDB_ENABLED: true
+      MONGO_HOST: ferretdb

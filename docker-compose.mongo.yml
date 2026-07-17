@@ -1,0 +1,25 @@
+services:
+  mongo:
+    # https://hub.docker.com/_/mongo
+    image: mongo:8.3
+    networks:
+      - fastnetmon-network
+    restart: unless-stopped
+    volumes:
+      - mongodb_data:/data/db
+    secrets:
+      - mongo_password
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: administrator
+      MONGO_INITDB_ROOT_PASSWORD_FILE: /run/secrets/mongo_password
+    healthcheck:
+      test: [ "CMD", "mongosh", "--eval", "db.adminCommand('ping')", "--quiet" ]
+      interval: 1m30s
+      timeout: 30s
+      retries: 5
+      start_period: 40s
+
+  fastnetmon:
+    depends_on:
+      mongo:
+        condition: service_healthy

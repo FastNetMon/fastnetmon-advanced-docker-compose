@@ -28,18 +28,19 @@ We set there variables
 Minimal example
 
 ```bash
-COMPOSE_FILE=docker-compose.ym
+COMPOSE_FILE=docker-compose.yml:docker-compose.mongo.yml
 ```
 
 Most full example
 
 ```bash
-COMPOSE_FILE=docker-compose.yml:docker-compose.clickhouse.yml:docker-compose.grafana.yml:docker-compose.trafficdb.yml:docker-compose.web-api.yml:docker-compose.gobgp.yml
+COMPOSE_FILE=docker-compose.yml:docker-compose.mongo.yml:docker-compose.clickhouse.yml:docker-compose.grafana.yml:docker-compose.trafficdb.yml:docker-compose.web-api.yml:docker-compose.gobgp.yml
 ```
 
 Components by file
 
-- docker-compose.yml - minimal base FNM (only FastNetMon and MongoDB)
+- docker-compose.yml - only FastNetMon
+- docker-compose.mongo.yml - MongoDB to run as DB with configuration for FastNetMon
 - docker-compose.gobgp.yml - Add GoBGP daemon
 - docker-compose.clickhouse.yml - Add clickhouse for saving metrics
 - docker-compose.grafana.yml - Add grafana for [traffic visualisation](https://fastnetmon.com/docs-fnm-advanced/advanced-visual-traffic/)(need enabled clickhouse)

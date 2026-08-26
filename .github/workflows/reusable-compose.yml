@@ -68,9 +68,9 @@ jobs:
         - name: Remove storage dir
           run: rm -rf ./storages 
         - name: Init secrets
-          run: ./init_secrets.sh
+          run: ./scripts/init_secrets.sh
         - name: Recreate volumes
-          run: ./create_storage_default_dirs.sh
+          run: ./scripts/init_storage_default_dirs.sh
         - name: Run docker compose
           run: docker compose up -d --wait
         - run: docker compose ps -a

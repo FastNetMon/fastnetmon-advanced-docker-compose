@@ -13,3 +13,5 @@ secrets/*
 !secrets/*.example
 
 /.env
+
+/lab/*

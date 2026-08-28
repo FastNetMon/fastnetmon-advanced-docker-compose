@@ -76,6 +76,8 @@ jobs:
         - name: Docker diagnostics
           if: failure()
           run: |
+            set +e
+
             echo "===== docker compose ps ====="
             docker compose ps -a
 

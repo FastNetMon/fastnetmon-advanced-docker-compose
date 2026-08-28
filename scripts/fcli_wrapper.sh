@@ -23,8 +23,8 @@ if [ "$PARAM1" = "commit" ]; then
     exit $?
 fi
 
-if [ $PARAM1 = "show" ];then
-    if [ $PARAM2 = "log" ];then
+if [ "$PARAM1" = "show" ];then
+    if [ "$PARAM2" = "log" ];then
         docker compose -f $COMPOSE_FILE logs $SERVICE_NAME
         exit $?
     fi

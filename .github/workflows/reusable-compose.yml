@@ -68,11 +68,38 @@ jobs:
         - name: Remove storage dir
           run: rm -rf ./storages 
         - name: Init secrets
-          run: ./init_secrets.sh
+          run: ./scripts/init_secrets.sh
         - name: Recreate volumes
-          run: ./create_storage_default_dirs.sh
+          run: ./scripts/init_storage_default_dirs.sh
         - name: Run docker compose
           run: docker compose up -d --wait
+        - name: Docker diagnostics
+          if: failure()
+          run: |
+            set +e
+
+            echo "===== docker compose ps ====="
+            docker compose ps -a
+
+            echo
+            echo "===== unhealthy containers ====="
+            docker ps -a \
+              --filter health=unhealthy \
+              --format '{{.ID}}' |
+            while read -r container; do
+              [ -n "$container" ] || continue
+
+              name="$(docker inspect --format '{{.Name}}' "$container")"
+              echo
+              echo "----- ${name#/} -----"
+              docker inspect \
+                --format '{{json .State.Health}}' \
+                "$container"
+            done
+
+            echo
+            echo "===== docker compose logs ====="
+            docker compose logs --no-color --timestamps
         - run: docker compose ps -a
         - run: docker compose logs fastnetmon
 

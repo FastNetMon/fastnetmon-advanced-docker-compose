@@ -25,7 +25,7 @@ for secret in $SECRETS_NAMES;do
         if [ "$secret" = "web_api_admin_password" ]; then
             password=`printf "_%s" $(pwgen 15 1)`
         fi
-(umask 077; printf '%s' "$password" > "${PROJECT_DIR}/secrets/$secret")
+    printf '%s' "$password" > "${PROJECT_DIR}/secrets/$secret"
     fi
 done
 

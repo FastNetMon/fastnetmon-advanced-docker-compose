@@ -18,7 +18,7 @@ PARAM1="${1:-}"
 PARAM2="${2:-}"
 
 
-if [ $PARAM1 = "commit" ];then
+if [ "$PARAM1" = "commit" ]; then
     docker compose -f $COMPOSE_FILE restart $SERVICE_NAME
     exit $?
 fi

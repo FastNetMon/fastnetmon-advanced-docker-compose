@@ -30,4 +30,7 @@ if [ "$PARAM1" = "show" ];then
     fi
 fi
 
-docker compose -f $COMPOSE_FILE exec $SERVICE_NAME fcli $@
+exec docker compose \
+    -f $COMPOSE_FILE \
+    exec -e JSON_MODE="${JSON_MODE:-off}" $SERVICE_NAME \
+    fcli "$@"

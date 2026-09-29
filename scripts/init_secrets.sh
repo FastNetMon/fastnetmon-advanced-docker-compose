@@ -15,17 +15,19 @@ grafana_admin_password
 clickhouse_grafana_password
 web_api_admin_password"
 
-#for secret in "${SECRETS_NAMES[@]}"
 for secret in $SECRETS_NAMES;do
     echo "Generate and write $secret"
     if [ -f "${PROJECT_DIR}/secrets/$secret" ]; then
         echo "$secret secret file already exist\n"
     else
-        password=`printf "%s" $(pwgen 16 1)`
+        LENGTH=${1:-16}
+        password=$(tr -dc 'A-Za-z0-9_@#%*+=-' < /dev/urandom | head -c "$LENGTH")
         if [ "$secret" = "web_api_admin_password" ]; then
-            password=`printf "_%s" $(pwgen 15 1)`
+            LENGTH=${1:-15}
+            password=$(tr -dc 'A-Za-z0-9_@#%*+=-' < /dev/urandom | head -c "$LENGTH")
+            password="_$password"
         fi
-    printf '%s' "$password" > "${PROJECT_DIR}/secrets/$secret"
+        printf '%s' "$password" > "${PROJECT_DIR}/secrets/$secret"
     fi
 done
 

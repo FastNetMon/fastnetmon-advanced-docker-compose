@@ -21,10 +21,10 @@ for secret in $SECRETS_NAMES;do
         echo "$secret secret file already exist\n"
     else
         LENGTH=${1:-16}
-        password=$(tr -dc 'A-Za-z0-9_@#%*+=-' < /dev/urandom | head -c "$LENGTH")
+        password=$(tr -dc 'A-Za-z0-9_-' < /dev/urandom | head -c "$LENGTH")
         if [ "$secret" = "web_api_admin_password" ]; then
             LENGTH=${1:-15}
-            password=$(tr -dc 'A-Za-z0-9_@#%*+=-' < /dev/urandom | head -c "$LENGTH")
+            password=$(tr -dc 'A-Za-z0-9_-' < /dev/urandom | head -c "$LENGTH")
             password="_$password"
         fi
         printf '%s' "$password" > "${PROJECT_DIR}/secrets/$secret"

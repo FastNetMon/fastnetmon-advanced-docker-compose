@@ -20,12 +20,16 @@ for secret in $SECRETS_NAMES;do
     if [ -f "${PROJECT_DIR}/secrets/$secret" ]; then
         echo "$secret secret file already exist\n"
     else
-        LENGTH=${1:-16}
-        password=$(tr -dc 'A-Za-z0-9_-' < /dev/urandom | head -c "$LENGTH")
+        password=""
+        LENGTH=16
+        while [ "${#password}" -lt "$LENGTH" ]; do
+            chunk=$(head -c 64 /dev/urandom | tr -dc 'A-Za-z0-9_-')
+            password="${password}${chunk}"
+        done
+        password=$(printf '%s' "$password" | cut -c "1-$LENGTH")
+
         if [ "$secret" = "web_api_admin_password" ]; then
-            LENGTH=${1:-15}
-            password=$(tr -dc 'A-Za-z0-9_-' < /dev/urandom | head -c "$LENGTH")
-            password="_$password"
+            password=$(printf '%s' "$password" | sed 's/^./_/')
         fi
         printf '%s' "$password" > "${PROJECT_DIR}/secrets/$secret"
     fi

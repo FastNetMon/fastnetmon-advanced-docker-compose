@@ -28,5 +28,4 @@ touch "${PROJECT_DIR}/storage/clickhouse/logs/.gitkeep"
 mkdir -p "${PROJECT_DIR}/storage/grafana/data/"
 touch "${PROJECT_DIR}/storage/grafana/data/.gitkeep"
 
-
-
+mkdir -p "${PROJECT_DIR}/storage/documentdb/data/"

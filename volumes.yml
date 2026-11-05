@@ -34,3 +34,9 @@ volumes:
       type: none
       o: bind
       device: "${FNM_PATH}/storage/grafana/data"
+
+  documentdb_data:
+    driver_opts:
+      type: none
+      o: bind
+      device: "${FNM_PATH}/storage/documentdb/data"

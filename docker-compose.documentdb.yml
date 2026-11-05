@@ -1,0 +1,61 @@
+services:
+  documentdb:
+    # https://documentdb.io/docs/getting-started/docker/
+    image: ghcr.io/documentdb/documentdb/documentdb-local:pg18-1.0.0
+    networks:
+      - fastnetmon-network
+    restart: unless-stopped
+    volumes:
+      - documentdb_data:/data
+      - ${FNM_PATH}/services/documentdb/custom-entry.sh:/custom-entry.sh:ro
+    secrets:
+      - mongo_password
+    environment:
+      USERNAME: administrator
+      PASSWORD_FILE: /run/secrets/mongo_password
+      DOCUMENTDB_USAGE_TELEMETRY: false
+      TLS_MODE: disabled
+      DOCUMENTDB_PORT: 27017
+    entrypoint: [ "/bin/bash", "/custom-entry.sh" ]
+    #healthcheck:
+    #  test: [ "CMD", "mongosh", "--eval", "db.adminCommand('ping')", "--quiet" ]
+    #  interval: 1m30s
+    #  timeout: 30s
+    #  retries: 5
+    #  start_period: 40s
+
+
+  documentdb-configure:
+    # need enable collation for LiveView
+    image: ghcr.io/documentdb/documentdb/documentdb-local:pg18-1.0.0
+    network_mode: "service:documentdb"
+    user: documentdb
+    entrypoint: [ "/bin/bash", "-ec" ]
+    command:
+      - |
+        until pg_isready -h 127.0.0.1 -p 9712 -U documentdb; do
+          sleep 1
+        done
+
+        psql -X -v ON_ERROR_STOP=1 \
+          -h 127.0.0.1 -p 9712 \
+          -U documentdb -d postgres <<'SQL'
+        ALTER SYSTEM SET documentdb_core.enableCollation = 'on';
+        SELECT pg_reload_conf();
+        SQL
+
+        psql -X -h 127.0.0.1 -p 9712 \
+          -U documentdb -d postgres \
+          -c "SELECT current_setting('documentdb_core.enableCollation');"
+    depends_on:
+      documentdb:
+        condition: service_healthy
+    restart: "no"
+
+  fastnetmon:
+    depends_on:
+      documentdb:
+        condition: service_healthy
+    environment:
+      MONGO_HOST: documentdb
+      DOCUMENTDB_ENABLED: true

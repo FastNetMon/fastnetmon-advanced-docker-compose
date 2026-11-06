@@ -13,6 +13,17 @@ cat > /etc/fastnetmon/fastnetmon.conf <<EOF
 "mongodb_username": ""
 }
 EOF
+elif [[ "${DOCUMENTDB_ENABLED}" == "true" ]]; then
+cat > /etc/fastnetmon/fastnetmon.conf <<EOF
+{
+"mongodb_host": "${MONGO_HOST}",
+"mongodb_port": 27017,
+"mongodb_database_name": "fastnetmon",
+"mongodb_username": "${MONGO_USERNAME}",
+"mongodb_auth_source": "admin",
+"mongodb_auth_mechanism": "SCRAM-SHA-256"
+}
+EOF
 else
 cat > /etc/fastnetmon/fastnetmon.conf <<EOF
 {

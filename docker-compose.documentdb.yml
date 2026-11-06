@@ -51,11 +51,15 @@ services:
       documentdb:
         condition: service_healthy
     restart: "no"
+    healthcheck:
+      disable: true
 
   fastnetmon:
     depends_on:
       documentdb:
         condition: service_healthy
+      documentdb-configure:
+        condition: service_completed_successfully
     environment:
       MONGO_HOST: documentdb
       DOCUMENTDB_ENABLED: true

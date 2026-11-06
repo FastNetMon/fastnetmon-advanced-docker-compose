@@ -22,6 +22,7 @@ We set there variables
 - `FNM_NOT_UPLOAD_ASN_MAPPING` - disable upload [asn mapping](https://fastnetmon.com/fastnetmon-asn-peering-reports/)
 - `COMPOSE_PROJECT_NAME`  - project name( will be prefix for containers names ).
 - `COMPOSE_FILE` - declare what components will be used.  
+- `FNM_DOCUMENTDB_VERSION` - **DocumetnDB** image version, if it is enabled via `COMPOSE_FILE`
 
 ### COMPOSE_FILE ###
 
@@ -47,6 +48,7 @@ Components by file
 - docker-compose.trafficdb.yml  - enable [traffic persistence](https://fastnetmon.com/docs-fnm-advanced/fastnetmon-advanced-traffic-persistency/)(need enabled clickhouse)
 - docker-compose.web-api.yml  - start [web API](https://fastnetmon.com/docs-fnm-advanced/advanced-api/) or with FNM_WEB_API_V2=true start [LiveView](https://fastnetmon.com/docs-fnm-advanced/fastnetmon-panel-ui-installation/)
 - docker-compose.ferretdb.yml - use FerretDB instead of MongoDB
+- docker-compose.documentdb.yml - use DocumentDB instead of MongoDB
 
 ### Configure volumes and secrets ###
 

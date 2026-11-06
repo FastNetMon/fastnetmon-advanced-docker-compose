@@ -54,7 +54,7 @@ Components by file
 
 Volumes, secrets and network config separtaed to files volumes.yml,secrets.yml and networks.yml.  
 By default volumes is directoies in `storage/`.
-To create deafult directories, please run `scripts/init_storage_default_dirs.sh` script.
+To create default directories, please run `scripts/init_storage_default_dirs.sh` script.
 
 Secrets are stored in `secrets/` and can be generated with the `scripts/init_secrets.sh` script.
 

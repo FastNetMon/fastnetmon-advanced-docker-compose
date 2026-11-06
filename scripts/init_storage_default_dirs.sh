@@ -8,24 +8,38 @@ if [ ! -f "./docker-compose.yml" ]; then
     exit 1
 fi
 
-mkdir -p "${PROJECT_DIR}/storage/mongo/data/"
-touch "${PROJECT_DIR}/storage/mongo/data/.gitkeep"
-touch "${PROJECT_DIR}/storage/.gitkeep"
+DIRECTORYS="
+mongo/data/
+fastnetmon/logs/
+fastnetmon/logs/attacks_dumps
+fastnetmon_web_api/logs/
+clickhouse/data/
+clickhouse/logs/
+grafana/data
+documentdb/data
+"
 
-mkdir -p "${PROJECT_DIR}/storage/fastnetmon/logs/"
-touch "${PROJECT_DIR}/storage/fastnetmon/logs/.gitkeep"
-touch "${PROJECT_DIR}/storage/fastnetmon/.gitkeep"
+GIT_KEEPS="
+.gitkeep
+mongo/data/.gitkeep
+fastnetmon/logs/.gitkeep
+fastnetmon/.gitkeep
+fastnetmon_web_api/logs/.gitkeep
+clickhouse/data/.gitkeep
+clickhouse/logs/.gitkeep
+grafana/data/.gitkeep
+"
 
-mkdir -p "${PROJECT_DIR}/storage/fastnetmon_web_api/logs/"
-touch "${PROJECT_DIR}/storage/fastnetmon_web_api/logs/.gitkeep"
+echo "Create storage dirs"
+for dir in $DIRECTORYS; do
+    echo "Create $dir"
+    mkdir -p "${PROJECT_DIR}/storage/${dir}"
+done
 
-mkdir -p "${PROJECT_DIR}/storage/clickhouse/data/"
-touch "${PROJECT_DIR}/storage/clickhouse/data/.gitkeep"
+echo "Recreate storage .gitkeep files"
+for file in $GIT_KEEPS; do
+    touch "${PROJECT_DIR}/storage/${file}"
+done
 
-mkdir -p "${PROJECT_DIR}/storage/clickhouse/logs/"
-touch "${PROJECT_DIR}/storage/clickhouse/logs/.gitkeep"
-
-mkdir -p "${PROJECT_DIR}/storage/grafana/data/"
-touch "${PROJECT_DIR}/storage/grafana/data/.gitkeep"
-
-mkdir -p "${PROJECT_DIR}/storage/documentdb/data/"
+echo "Done"
+exit 0

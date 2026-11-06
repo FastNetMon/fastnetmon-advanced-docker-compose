@@ -12,6 +12,8 @@ DIRECTORYS="
 mongo/data/
 fastnetmon/logs/
 fastnetmon/logs/attacks_dumps
+fastnetmon/lib/
+fastnetmon/cache/
 fastnetmon_web_api/logs/
 clickhouse/data/
 clickhouse/logs/

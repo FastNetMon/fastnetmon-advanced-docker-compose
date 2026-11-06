@@ -11,6 +11,18 @@ volumes:
       o: bind
       device: "${FNM_PATH}/storage/fastnetmon/logs"
 
+  fastnetmon_lib:
+    driver_opts:
+      type: none
+      o: bind
+      device: "${FNM_PATH}/storage/fastnetmon/lib"
+
+  fastnetmon_cache:
+    driver_opts:
+      type: none
+      o: bind
+      device: "${FNM_PATH}/storage/fastnetmon/cache"
+
   fastnetmon_web_api_logs:
     driver_opts:
       type: none

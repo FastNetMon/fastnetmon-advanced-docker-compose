@@ -23,6 +23,8 @@ services:
       FNM_NOT_UPLOAD_ASN_MAPPING: ${FNM_NOT_UPLOAD_ASN_MAPPING:-false}
     volumes:
       - fastnetmon_logs:/var/log/fastnetmon/
+      - fastnetmon_lib:/var/lib/fastnetmon/
+      - fastnetmon_cache:/var/cache/fastnetmon/
       - ${FNM_PATH}/services/fastnetmon/custom-entry.sh:/custom-entry.sh:ro
       - ${FNM_PATH}/seeds/fastnetmon/:/etc/fastnetmon/
     ports:

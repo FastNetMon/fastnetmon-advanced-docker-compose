@@ -1,7 +1,7 @@
 services:
   documentdb:
     # https://documentdb.io/docs/getting-started/docker/
-    image: ghcr.io/documentdb/documentdb/documentdb-local:pg18-1.0.0
+    image: ghcr.io/documentdb/documentdb/documentdb-local:${FNM_DOCUMENTDB_VERSION:-latest}
     networks:
       - fastnetmon-network
     restart: unless-stopped
@@ -27,7 +27,7 @@ services:
 
   documentdb-configure:
     # need enable collation for LiveView
-    image: ghcr.io/documentdb/documentdb/documentdb-local:pg18-1.0.0
+    image: ghcr.io/documentdb/documentdb/documentdb-local:${FNM_DOCUMENTDB_VERSION:-latest}
     network_mode: "service:documentdb"
     user: documentdb
     entrypoint: [ "/bin/bash", "-ec" ]
